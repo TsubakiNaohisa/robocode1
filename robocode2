@@ -1,0 +1,106 @@
+package s13ec068;
+import robocode.*;
+import java.awt.Color;
+
+
+// API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
+
+/**
+ * a874_01 - a robot by (your name here)
+ */
+public class a874_03 extends AdvancedRobot
+{
+
+       
+	
+
+	public void run() {
+	     setAdjustGunForRobotTurn(true);
+		 setAdjustRadarForGunTurn(true);
+		 setAdjustRadarForRobotTurn(true);
+	
+		 setColors(Color.blue,Color.cyan,Color.darkGray); // body,gun,radar
+		
+         
+		// Robot main loop
+		while(true) {
+		   setTurnRadarRight(10000000);
+		   
+           if((getX()<120)||(getX()>(getBattleFieldWidth()-120))){
+		       if(getHeading()<0){
+		           setTurnRight(180);
+			       ahead(100);
+			   }
+			   else{
+			       setTurnLeft(180);
+			       ahead(100);
+			   }
+		   }
+		    if((getY()<120)||(getY()>(getBattleFieldHeight()-120))){
+		        if(getHeading()<0){
+		           setTurnRight(180);
+			       ahead(100);
+			   }
+			   else{
+			       setTurnLeft(180);
+			       ahead(100);
+			   }
+		   }			
+
+		   setTurnRight(75);
+		   ahead(100);
+		   setTurnLeft(75);
+           ahead(100);
+		 
+		 
+		  
+			
+			}
+	}
+
+	/**
+	 * onScannedRobot: What to do when you see another robot
+	 */
+	public void onScannedRobot(ScannedRobotEvent e) {
+	    	double kaiten= getHeading()+e.getBearing()-getGunHeading();
+		 	
+           if(kaiten>180){
+			   kaiten-=360;
+		  }
+		  if(kaiten<-180){
+			   kaiten=+360;
+		   }
+		   setTurnGunRight(kaiten);
+		   
+           if(e.getDistance()<200){
+			  fire(3); 
+		   }
+		   else{
+			 fire(1.5);  
+		   }
+		
+		
+	}
+	public void onHitByBullet(HitByBulletEvent e) {
+	
+	}
+	
+	public void onHitWall(HitWallEvent e) {
+		 if(e.getBearing()<0){
+		           setTurnRight(180);
+			       ahead(100);
+			   }
+			   else{
+			       setTurnLeft(180);
+			       ahead(100);
+			   }
+		
+	}	
+	
+    public void onHitRobot(HitRobotEvent e){
+		
+		   
+	}
+	
+  
+}
