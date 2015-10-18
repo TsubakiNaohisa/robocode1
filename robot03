@@ -1,0 +1,97 @@
+Enter file contents here
+package s13ec068;
+import robocode.*;
+//import java.awt.Color;
+
+// API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
+
+/**
+ * BattleDroid10 - a robot by (your name here)
+ */
+public class BattleDroid10 extends Robot
+{
+	/**
+	 * run: BattleDroid10's default behavior
+	 */
+	    double previousEnergy=100;
+        double enemyEnergy=100;
+		int moveDirection =1;
+		double sweepAngle=100;//radar
+		int sweepDirection =1;
+		
+	public void run() {
+		// Initialization of the robot should be put here
+
+		// After trying out your robot, try uncommenting the import at the top,
+		// and the next line:
+
+		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
+
+		// Robot main loop
+		setAdjustGunForRobotTurn(true);
+		setAdjustRadarForGunTurn(true);
+		setAdjustRadarForRobotTurn(true);
+		while(true) {
+			// Replace the next 4 lines with any behavior you would like
+			if(sweepAngle>90){
+			turnRadarRight(360*sweepDirection);
+			}else{
+			  turnRadarRight(sweepAngle*sweepDirection*moveDirection);
+			  sweepAngle+=20;
+			  sweepDirection*=1;
+			  }
+			  
+		}
+	}
+
+	/**
+	 * onScannedRobot: What to do when you see another robot
+	 */
+
+
+	/**
+	 * onHitByBullet: What to do when you're hit by a bullet
+	 */
+	public void onScannedRobot(ScannedRobotEvent e){
+		double kaiten = getHeading()+e.getBearing()-getGunHeading();
+		
+        if(kaiten>180){
+			kaiten-=360;
+		}
+	    
+        if(kaiten<-180){
+			kaiten+=360;
+		}
+		turnGunRight(kaiten);
+		
+		fire(1);
+		turnRight(90+e.getBearing()+moveDirection*15);
+		
+       double changeInEnergy= enemyEnergy-e.getEnergy();
+	   if(changeInEnergy !=0){
+	       moveDirection *=-1;
+		   ahead(100*moveDirection);
+	   
+	   double  radarKaiten = Math.atan2(100,e.getDistance());
+	   radarKaiten = Math.toDegrees(radarKaiten)+10;
+	   turnRadarRight(radarKaiten*-moveDirection);
+	   
+	   }
+	   previousEnergy=e.getEnergy();
+	   sweepAngle=10;
+	   
+	}
+	
+	public void onHitByBullet(HitByBulletEvent e) {
+		// Replace the next line with any behavior you would like
+		turnRadarRight(getHeading()+e.getBearing()-getRadarHeading());
+	}
+	
+	/**
+	 * onHitWall: What to do when you hit a wall
+	 */
+	public void onHitWall(HitWallEvent e) {
+		// Replace the next line with any behavior you would like
+		back(20);
+	}	
+}
